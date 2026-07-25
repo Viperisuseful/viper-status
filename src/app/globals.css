@@ -1,0 +1,170 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@font-face {
+  font-family: "Viper Sans";
+  src: url("/fonts/viper-sans.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --font-sans: "Viper Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-heading: "Viper Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, "SFMono-Regular", Consolas, monospace;
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+}
+
+:root {
+  --background: #fbfcfd;
+  --foreground: #0a0e12;
+  --card: #ffffff;
+  --card-foreground: #0a0e12;
+  --popover: #ffffff;
+  --popover-foreground: #0a0e12;
+  --primary: #3069f6;
+  --primary-foreground: #ffffff;
+  --secondary: #f0f4f8;
+  --secondary-foreground: #151a20;
+  --muted: #f0f4f8;
+  --muted-foreground: #5d646c;
+  --accent: #e6efff;
+  --accent-foreground: #174ec7;
+  --destructive: #c83232;
+  --border: #dadee5;
+  --input: #dadee5;
+  --ring: #3069f6;
+  --radius: 0.875rem;
+  --status-operational: #08683a;
+  --status-operational-soft: #eaf7ef;
+  --status-degraded: #a45b08;
+  --status-degraded-soft: #fff5df;
+  --status-outage: #c83232;
+  --status-outage-soft: #fff0f0;
+  --status-maintenance: #3069f6;
+  --status-maintenance-soft: #e6efff;
+  --status-unknown: #747b84;
+  --status-unknown-soft: #f0f2f4;
+}
+
+.dark {
+  --background: #070a0f;
+  --foreground: #f2f4f6;
+  --card: #10141a;
+  --card-foreground: #f2f4f6;
+  --popover: #10141a;
+  --popover-foreground: #f2f4f6;
+  --primary: #5c8fff;
+  --primary-foreground: #071029;
+  --secondary: #171c22;
+  --secondary-foreground: #f2f4f6;
+  --muted: #171c22;
+  --muted-foreground: #959ca5;
+  --accent: #162137;
+  --accent-foreground: #a9c5ff;
+  --destructive: #ff7777;
+  --border: rgb(255 255 255 / 11%);
+  --input: rgb(255 255 255 / 16%);
+  --ring: #5c8fff;
+  --status-operational: #4fca84;
+  --status-operational-soft: #10281b;
+  --status-degraded: #f0ad4e;
+  --status-degraded-soft: #30220c;
+  --status-outage: #ff7777;
+  --status-outage-soft: #321515;
+  --status-maintenance: #7da5ff;
+  --status-maintenance-soft: #162137;
+  --status-unknown: #a5abb2;
+  --status-unknown-soft: #20252b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  html {
+    @apply bg-background font-sans;
+  }
+
+  body {
+    @apply min-h-screen bg-background text-foreground antialiased;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--accent-foreground);
+  }
+}
+
+@layer utilities {
+  .status-dot {
+    background: var(--state-color);
+  }
+
+  .status-soft {
+    background: var(--state-soft);
+    color: var(--state-color);
+  }
+
+  [data-state="operational"] {
+    --state-color: var(--status-operational);
+    --state-soft: var(--status-operational-soft);
+  }
+
+  [data-state="degraded"] {
+    --state-color: var(--status-degraded);
+    --state-soft: var(--status-degraded-soft);
+  }
+
+  [data-state="outage"] {
+    --state-color: var(--status-outage);
+    --state-soft: var(--status-outage-soft);
+  }
+
+  [data-state="maintenance"] {
+    --state-color: var(--status-maintenance);
+    --state-soft: var(--status-maintenance-soft);
+  }
+
+  [data-state="unknown"] {
+    --state-color: var(--status-unknown);
+    --state-soft: var(--status-unknown-soft);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
