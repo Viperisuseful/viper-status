@@ -7,7 +7,11 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://status.viperisuseful.cc"),
   title: "Viper Status",
   description: "Current availability and incident history for public Viper services.",
-  icons: { icon: "/favicon.svg" },
+  icons: {
+    icon: [{ url: "/favicon.svg?v=2", type: "image/svg+xml" }],
+    shortcut: "/favicon.svg?v=2",
+    apple: "/viper-mark.svg",
+  },
   openGraph: {
     title: "Viper Status",
     description: "Current availability and incident history for public Viper services.",
@@ -42,4 +46,3 @@ export default function RootLayout({
     </html>
   );
 }
-

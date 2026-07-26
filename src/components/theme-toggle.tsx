@@ -1,6 +1,6 @@
 "use client";
 
-import { Laptop, Moon, Sun } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,16 +9,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const order = ["system", "light", "dark"] as const;
-
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
-  const current = order.includes(theme as (typeof order)[number])
-    ? (theme as (typeof order)[number])
-    : "system";
-  const next = order[(order.indexOf(current) + 1) % order.length];
-  const Icon = current === "light" ? Sun : current === "dark" ? Moon : Laptop;
-  const label = `Theme: ${current}. Switch to ${next}.`;
+  const { resolvedTheme, setTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+  const nextTheme = isDark ? "light" : "dark";
+  const Icon = isDark ? Sun : Moon;
+  const label = `Switch to ${nextTheme} theme`;
 
   return (
     <Tooltip>
@@ -28,7 +24,7 @@ export function ThemeToggle() {
             variant="outline"
             size="icon-lg"
             aria-label={label}
-            onClick={() => setTheme(next)}
+            onClick={() => setTheme(nextTheme)}
           />
         }
       >
