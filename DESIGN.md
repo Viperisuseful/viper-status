@@ -105,3 +105,16 @@ Public components:
 6. QuickRunLab API
 
 Use plain operational copy. Do not use em dashes, marketing slogans, version labels, fake percentages, or decorative metadata.
+
+## Approved visual direction
+
+The approved concept board is stored at
+`docs/design/status-concept-board.png`, with desktop and mobile references at
+`docs/design/status-desktop.png` and `docs/design/status-mobile.png`.
+
+- Design dials: density 5, expression 3, motion 5
+- One unified service register instead of independent metric cards
+- Compact mobile status dots retain accessible text for assistive technology
+- Healthy state uses the AA-safe light-theme green `#08683a`
+- Real recent checks may begin with unknown segments when a monitor has less
+  than 30 retained checks
