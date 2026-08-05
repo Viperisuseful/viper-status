@@ -13,6 +13,7 @@ export const heartbeatSchema = z
 export const statusPageSchema = z
   .object({
     incident: z.unknown().optional().nullable(),
+    incidents: z.array(z.unknown()).optional(),
     publicGroupList: z.array(
       z
         .object({
@@ -40,6 +41,7 @@ export const heartbeatResponseSchema = z
 export const incidentHistorySchema = z
   .object({
     incidentList: z.array(z.unknown()).optional(),
+    incidents: z.array(z.unknown()).optional(),
   })
   .passthrough();
 

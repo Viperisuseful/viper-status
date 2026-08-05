@@ -34,5 +34,9 @@ export async function fetchPublicStatus(): Promise<PublicStatusDocument> {
   const heartbeat = heartbeatResponseSchema.parse(heartbeatValue);
   const history = incidentHistorySchema.parse(historyValue);
 
-  return normalizeStatus(page, heartbeat, history.incidentList || []);
+  return normalizeStatus(
+    page,
+    heartbeat,
+    history.incidents ?? history.incidentList ?? [],
+  );
 }

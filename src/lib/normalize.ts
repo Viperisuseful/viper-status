@@ -53,6 +53,48 @@ function normalizeIncident(value: unknown, index: number): PublicIncident | null
   };
 }
 
+function heartbeatIncidents(
+  page: KumaStatusPage,
+  heartbeat: KumaHeartbeatResponse,
+): PublicIncident[] {
+  const monitorMap = monitorsByName(page);
+
+  return PUBLIC_COMPONENTS.flatMap((component) =>
+    component.monitors.flatMap((monitorName) => {
+      const monitor = monitorMap.get(monitorName) as MonitorRecord | undefined;
+      if (!monitor) return [];
+
+      const beats = heartbeat.heartbeatList[String(monitor.id)] || [];
+      const incidents: PublicIncident[] = [];
+      let startedAt: string | null = null;
+
+      const closeIncident = (resolvedAt: string | null) => {
+        if (!startedAt) return;
+        incidents.push({
+          key: `heartbeat-${monitor.id}-${startedAt}`,
+          title: `${component.name} outage`,
+          body: `Uptime Kuma monitor "${monitor.name}" reported an outage.`,
+          createdAt: startedAt,
+          resolvedAt,
+          active: !resolvedAt,
+        });
+        startedAt = null;
+      };
+
+      for (const beat of beats) {
+        if (beat.status === 0) {
+          startedAt ||= beat.time;
+        } else if (startedAt) {
+          closeIncident(beat.time);
+        }
+      }
+      if (startedAt) closeIncident(null);
+
+      return incidents;
+    }),
+  );
+}
+
 export function normalizeStatus(
   page: KumaStatusPage,
   heartbeat: KumaHeartbeatResponse,
@@ -101,12 +143,18 @@ export function normalizeStatus(
     };
   });
 
-  const currentIncident = normalizeIncident(page.incident, 0);
+  const declaredIncidents = [
+    ...(page.incidents ?? []),
+    ...(page.incident ? [page.incident] : []),
+  ];
   const incidents = [
-    ...(currentIncident ? [currentIncident] : []),
+    ...declaredIncidents
+      .map((incident, index) => normalizeIncident(incident, index))
+      .filter((incident): incident is PublicIncident => Boolean(incident)),
     ...historyValues
       .map((incident, index) => normalizeIncident(incident, index + 1))
       .filter((incident): incident is PublicIncident => Boolean(incident)),
+    ...heartbeatIncidents(page, heartbeat),
   ].filter(
     (incident, index, list) =>
       list.findIndex(
@@ -125,7 +173,7 @@ export function normalizeStatus(
   const stale = now.getTime() - new Date(updatedAt).getTime() > STALE_AFTER_MS;
 
   return {
-    overall: currentIncident?.active
+    overall: incidents.some((incident) => incident.active)
       ? "degraded"
       : worstState(services.map((service) => service.state)),
     services,
